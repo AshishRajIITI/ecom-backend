@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-const { createHmac } = await import('crypto');
-import { v4 as uuidv4 } from 'uuid';
+const mongoose = require("mongoose");
+const { createHmac } = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 
 const { Schema } = mongoose;
 
@@ -8,7 +8,7 @@ const userSchema = new Schema({
     name: {
         type: String,
         required: true,
-        trime: true,
+        trim: true,
         maxlength: 32,
     },
 
