@@ -1,9 +1,27 @@
 var express = require('express');
 var router = express.Router();
+const User = require("../models/user");
+const { body, validationResult, check } = require('express-validator');
+const { signout, signup, signin } = require("../controllers/auth");
 
-const { signout, signup } = require("../controllers/auth");
+router.post("/signup",
+    body('name').isLength({ min: 3 }).withMessage('name should be at least 3 characters long'),
+    body('email').isEmail().withMessage("email is not correct"),
+    body('password')
+        .isLength({ min: 5 })
+        .withMessage('must be at least 5 chars long')
+        .matches(/\d/)
+        .withMessage('must contain a number')
+    , signup);
 
-router.post("/signup", signup);
+router.post("/signin",
+    body('email').isEmail().withMessage("Email is not correct"),
+    body('password')
+        .isLength({ min: 1 })
+        .withMessage('please write password')
+    , signin);
+
+
 router.get("/signout", signout);
 
 module.exports = router;
