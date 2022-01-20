@@ -62,5 +62,34 @@ exports.signin = (req, res) => {
 }
 
 exports.signout = (req, res) => {
-    res.send("signout page through controller");
+    res.clearCookie("token");
+    return res.send("You are suceesfully signed out");
+}
+
+
+//protected routing
+exports.isSignedIn = expressJwt({
+    secret: process.env.TOKENPASSWORD,
+    requestProperty: 'auth',
+});
+
+//custom middlewares
+exports.isAuthenticated = (req, res, next) => {
+    let checker = req.profile && req.auth && req.profile._id === req.auth._id;
+    if (!checker) {
+        return res.status(403).json({
+            error: "ACCESS DENIED"
+        });
+    }
+    next();
+}
+
+//is admin check
+exports.isAdmin = (req, res, next) => {
+    if (req.profile.role === 0) {
+        return res.status(403).json({
+            error: "You are not ADMIN, Access denied"
+        });
+    }
+    next();
 }
