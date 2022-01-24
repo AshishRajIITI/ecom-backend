@@ -1,6 +1,10 @@
 require("dotenv").config();
 
+
+//importing routes;
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
+
 const mongoose = require("mongoose");
 const express = require("express");
 const app = express();
@@ -19,8 +23,8 @@ mongoose
   .then(() => {
     console.log("DB CONNECTED");
   })
-  .catch(()=>{
-      console.log("THERE'S AN ERROR IN DB CONNECTION")
+  .catch(() => {
+    console.log("THERE'S AN ERROR IN DB CONNECTION")
   });
 
 
@@ -32,6 +36,8 @@ app.use(cookieParser());
 
 //ROUTES
 app.use("/api", authRoutes);
+app.use("/api", userRoutes);
+
 
 //PORT
 const port = process.env.PORT || 8000;
