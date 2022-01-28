@@ -1,6 +1,8 @@
-const formidable = require("formidable");
 const Product = require("../models/product");
+
+const formidable = require("formidable");
 const fs = require("fs");
+const _ = require("lodash");
 
 exports.getProductById = (req, res, next, id) => {
 
@@ -33,7 +35,7 @@ exports.createProduct = (req, res) => {
                 error: "problem with image"
             });
         }
-
+        //destructure the fields
         const { name, description, price, category, stock } = fields;
 
         if (!name || !description || !price || !category || !stock) {
@@ -42,10 +44,12 @@ exports.createProduct = (req, res) => {
             });
         }
 
+        console.log(fields);
         let product = new Product(fields);
 
+        //handle file here
         if (file.photo) {
-            if (file.phot.size > 3 * 1024 * 1024) {
+            if (file.photo.size > 3000000) {
                 return res.status(400).json({
                     error: "File size too big!"
                 });
@@ -54,21 +58,20 @@ exports.createProduct = (req, res) => {
             product.photo.contentType = file.photo.type;
         }
 
-        console.log(product);
 
+        //save to the DB
         product.save((err, product) => {
             if (err) {
-                return res.status(400).json({
-                    error: "Problem in saving the product to DB."
+                res.status(400).json({
+                    error: "Saving tshirt in DB failed"
                 });
             }
             res.json(product);
         });
-
     });
-}
+};
 
-exports.photo = (req, res) => {
+exports.photo = (req, res, next) => {
     //WHY BELOW CODE
     if (req.product.photo.data) {
         res.set("Content-Type", req.product.photo.contentType);
