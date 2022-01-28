@@ -7,7 +7,7 @@ const _ = require("lodash");
 exports.getProductById = (req, res, next, id) => {
 
     Product.findById(id)
-        .populate("category") //DOUBT: why this
+        .populate("category")//important
         .exec((err, product) => {
             if (err) {
                 return res.status(400).json({
@@ -175,6 +175,7 @@ exports.updateProduct = (req, res) => {
 
 }
 
+//update controllers
 exports.updateStock = (req, res, next) => {
 
     let myOperations = req.body.order.products.map((product) => {

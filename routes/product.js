@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
+const { isSignedIn, isAuthenticated, isAdmin } = require("../controllers/auth");
 const { getUserById } = require("../controllers/user");
 const { getProductById, getProduct, photo, getAllProducts, createProduct, removeProduct, updateProduct, getAllCategories } = require("../controllers/product");
-const { isSignedIn, isAuthenticated, isAdmin } = require("../controllers/auth");
 
 //param routes
 router.param("userId", getUserById);
