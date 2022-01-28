@@ -25,6 +25,36 @@ exports.getProduct = (req, res) => {
     return res.json(req.product);
 }
 
+exports.photo = (req, res, next) => {
+    //WHY BELOW CODE
+    if (req.product.photo.data) {
+        res.set("Content-Type", req.product.photo.contentType);
+        return res.send(req.product.photo.data);
+    }
+    next();
+}
+
+exports.getAllProducts = (req, res) => {
+    let limit = req.query.limit ? parseInt(req.query.limit) : 8;
+    let sortby = req.query.sortby ? req.query.sortby : "_id";
+    Product
+        .find()
+        .populate("category")
+        .select("-photo")
+        .sort([[sortby, "asc"]])
+        .limit(limit)
+        .exec((err, allProducts) => {
+            if (err) {
+                return res.status(400).json({
+                    error: "No products found on allProducts search!"
+                })
+            }
+
+            return res.json(allProducts);
+        })
+
+}
+
 exports.createProduct = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -44,7 +74,7 @@ exports.createProduct = (req, res) => {
             });
         }
 
-        console.log(fields);
+        // console.log(fields);
         let product = new Product(fields);
 
         //handle file here
@@ -70,15 +100,6 @@ exports.createProduct = (req, res) => {
         });
     });
 };
-
-exports.photo = (req, res, next) => {
-    //WHY BELOW CODE
-    if (req.product.photo.data) {
-        res.set("Content-Type", req.product.photo.contentType);
-        return res.send(req.product.photo.data);
-    }
-    next();
-}
 
 exports.removeProduct = (req, res) => {
     let product = req.product;
@@ -152,4 +173,39 @@ exports.updateProduct = (req, res) => {
         });
     });
 
+}
+
+exports.updateStock = (req, res, next) => {
+
+    let myOperations = req.body.order.products.map((product) => {
+        return {
+            updateOne: {
+                filter: { _id: product._id },
+                update: { $inc: { stock: -product.count, sold: +product.count } }
+            }
+        }
+    })
+
+    Product.bulkWrite(myOperations, {}, (err, products) => {
+        if (err) {
+            return res.status(400).json({
+                error: "BulkWrite error!"
+            });
+        }
+
+        next();
+    })
+
+
+}
+
+exports.getAllCategories = (req, res) => {
+    Product.distinct("categories", {}, (err, category) => {
+        if (err) {
+            return res.status(400).json({
+                error: "getAllCategories error!"
+            });
+        }
+        res.json(category);
+    })
 }
