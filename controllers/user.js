@@ -36,7 +36,7 @@ exports.updateUser = (req, res) => {
             // why we are writing below things?
             user.salt = undefined;
             user.encry_password = undefined;
-            res.json(user);
+            return res.json(user);
         }
     )
 };

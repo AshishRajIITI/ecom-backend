@@ -66,6 +66,7 @@ exports.signout = (req, res) => {
     return res.send("You are suceesfully signed out");
 }
 
+//TODO: not UNDERSTood
 
 //protected routing
 exports.isSignedIn = expressJwt({
@@ -73,6 +74,7 @@ exports.isSignedIn = expressJwt({
     requestProperty: 'auth',
 });
 
+//TODO: not UNDERSTood
 //custom middlewares
 exports.isAuthenticated = (req, res, next) => {
     let checker = req.profile && req.auth && req.profile._id == req.auth._id;

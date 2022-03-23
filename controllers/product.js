@@ -15,7 +15,7 @@ exports.getProductById = (req, res, next, id) => {
                 })
             }
             req.product = product;
-            next()
+            next();
         })
 }
 
@@ -61,6 +61,7 @@ exports.createProduct = (req, res) => {
 
     form.parse(req, (err, fields, file) => {
         if (err) {
+            console.log(err);
             return res.status(400).json({
                 error: "problem with image"
             });
@@ -77,7 +78,7 @@ exports.createProduct = (req, res) => {
         // console.log(fields);
         let product = new Product(fields);
 
-        //handle file here
+        //handle photo here
         if (file.photo) {
             if (file.photo.size > 3000000) {
                 return res.status(400).json({
@@ -87,7 +88,6 @@ exports.createProduct = (req, res) => {
             product.photo.data = fs.readFileSync(file.photo.path);
             product.photo.contentType = file.photo.type;
         }
-
 
         //save to the DB
         product.save((err, product) => {
@@ -112,29 +112,13 @@ exports.removeProduct = (req, res) => {
         }
         return res.json({
             message: "Deletion was a success",
-            deletedProduct
+            removedProduct,
         });
     })
 
 }
 
-exports.removeProduct = (req, res) => {
-
-    let product = req.product;
-    product.remove((err, deletedProduct) => {
-        if (err) {
-            return res.status(400).json({
-                error: "Failed to delete the product"
-            });
-        }
-        res.json({
-            message: "Deletion was a success",
-            deletedProduct
-        });
-    });
-};
-
-// delete controllers
+// update tshirt controllers
 exports.updateProduct = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -178,6 +162,7 @@ exports.updateProduct = (req, res) => {
 //update controllers
 exports.updateStock = (req, res, next) => {
 
+    //TODO: doubt
     let myOperations = req.body.order.products.map((product) => {
         return {
             updateOne: {
@@ -187,6 +172,7 @@ exports.updateStock = (req, res, next) => {
         }
     })
 
+    //TODO:
     Product.bulkWrite(myOperations, {}, (err, products) => {
         if (err) {
             return res.status(400).json({
@@ -195,12 +181,12 @@ exports.updateStock = (req, res, next) => {
         }
 
         next();
-    })
-
+    });
 
 }
 
 exports.getAllCategories = (req, res) => {
+    //TODO: distinct?
     Product.distinct("categories", {}, (err, category) => {
         if (err) {
             return res.status(400).json({

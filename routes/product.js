@@ -14,7 +14,7 @@ router.get("/product/:productId", getProduct);
 //why this route??
 router.get("/product/photo/:productId", photo);
 
-//get all products (no requirement oof signin)
+//get all products (no requirement of signin)
 router.get("/products", getAllProducts);
 router.get("/products/categories", getAllCategories);
 

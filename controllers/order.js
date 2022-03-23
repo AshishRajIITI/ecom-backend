@@ -11,7 +11,7 @@ exports.getOrderById = (req, res, next, id) => {
                 })
             }
             req.order = order;
-            next()
+            next();
         })
 }
 
@@ -30,7 +30,6 @@ exports.createOrder = (req, res) => {
     })
 
 }
-
 
 exports.getAllOrders = (req, res) => {
     Order.find()
@@ -58,7 +57,6 @@ exports.updateOrderStatus = (req, res) => {
             res.json(order);
         }
     )
-
 }
 
 exports.getOrderStatus = (req, res) => {
