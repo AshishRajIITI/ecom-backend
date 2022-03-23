@@ -5,7 +5,6 @@ const fs = require("fs");
 const _ = require("lodash");
 
 exports.getProductById = (req, res, next, id) => {
-
     Product.findById(id)
         .populate("category")//important
         .exec((err, product) => {
@@ -112,7 +111,6 @@ exports.removeProduct = (req, res) => {
         }
         return res.json({
             message: "Deletion was a success",
-            removedProduct,
         });
     })
 
@@ -131,6 +129,10 @@ exports.updateProduct = (req, res) => {
         }
 
         //updation code
+        console.log("body", req.body);
+        console.log("product", req.product);
+        console.log("data", req.data);
+
         let product = req.product;
         product = _.extend(product, fields);
 
@@ -144,7 +146,7 @@ exports.updateProduct = (req, res) => {
             product.photo.data = fs.readFileSync(file.photo.path);
             product.photo.contentType = file.photo.type;
         }
-        // console.log(product);
+        console.log(product);
 
         //save to the DB
         product.save((err, product) => {
@@ -153,7 +155,7 @@ exports.updateProduct = (req, res) => {
                     error: "Updation of product failed"
                 });
             }
-            res.json(product);
+            return res.json(product);
         });
     });
 
