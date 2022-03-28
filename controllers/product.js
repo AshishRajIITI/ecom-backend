@@ -25,7 +25,7 @@ exports.getProduct = (req, res) => {
 }
 
 exports.photo = (req, res, next) => {
-    //WHY BELOW CODE
+    //TODO:WHY BELOW CODE
     if (req.product.photo.data) {
         res.set("Content-Type", req.product.photo.contentType);
         return res.send(req.product.photo.data);
