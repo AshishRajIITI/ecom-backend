@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "build": "babel app.js --out-file server.compiled.js",
     "start": "nodemon app.js"
   },
   "keywords": [],
