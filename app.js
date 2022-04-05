@@ -19,7 +19,7 @@ const cookieParser = require("cookie-parser");
 
 //DB CONNECTION
 mongoose
-  .connect(process.env.DATABASE_CONNECTION, {
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true
